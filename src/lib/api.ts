@@ -1,43 +1,34 @@
 import { TryOnBody, TryOnResponse } from "./types";
-import { buildPrompt } from "./prompt";
 
-const DEMO_MODE = true; // Set to false when real API is available
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 export async function tryOnAPI(body: TryOnBody): Promise<TryOnResponse> {
-  // In demo mode, simulate API delay and return the original image with overlay text
-  if (DEMO_MODE) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // For demo, return the original image as result
-        // In production, this would call the real AI API
-        const resultUrl = body.personImageBase64 || body.personImageUrl || "";
-        
-        resolve({
-          resultUrl,
-          width: 1024,
-          height: 1024,
-          meta: {
-            demo: true,
-            prompt: buildPrompt(body.style as any),
-            style: body.style,
-          },
-        });
-      }, 2000); // Simulate 2s processing
-    });
-  }
-
-  // Real API call (when API key is available)
   try {
-    const response = await fetch("/api/tryon", {
+    // Convert data URL to pure base64 if needed
+    let base64Data = body.personImageBase64;
+    if (base64Data && base64Data.includes(",")) {
+      base64Data = base64Data.split(",")[1];
+    }
+
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/tryon`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        personImageBase64: base64Data,
+        personImageUrl: body.personImageUrl,
+        style: body.style,
+        quality: body.quality || "hd",
+        watermark: body.watermark || false,
+      }),
     });
 
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      const error = await response.json();
+      throw new Error(error.error || `API error: ${response.status}`);
     }
 
     const data: TryOnResponse = await response.json();
@@ -49,13 +40,8 @@ export async function tryOnAPI(body: TryOnBody): Promise<TryOnResponse> {
 }
 
 export function createDownloadUrl(url: string): string {
-  // In demo mode, return the URL as-is for direct download
-  if (DEMO_MODE) {
-    return url;
-  }
-
-  // In production, call sign-download endpoint
-  return `/api/sign-download?url=${encodeURIComponent(url)}`;
+  // Data URLs can be downloaded directly
+  return url;
 }
 
 export function downloadImage(url: string, filename: string) {
