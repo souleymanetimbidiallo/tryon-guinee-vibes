@@ -1,73 +1,123 @@
-# Welcome to your Lovable project
+# TryOn Guinée 🇬🇳
 
-## Project info
+Application web d'essayage virtuel de tenues traditionnelles guinéennes utilisant l'intelligence artificielle.
 
-**URL**: https://lovable.dev/projects/aea4db92-fd75-41ab-8c52-ab3ac84aa5e5
+## 🎯 Fonctionnalités
 
-## How can I edit this code?
+- **Upload de photo** : Glissez-déposez ou sélectionnez votre photo
+- **Catalogue de styles** : Abaya, Boubou, Pagne, Léppi avec options de personnalisation
+- **Génération IA** : Aperçu réaliste avec conservation du visage et de la pose
+- **Téléchargement** : Enregistrez vos essayages virtuels
+- **Respect de la vie privée** : Traitement temporaire sans stockage permanent
 
-There are several ways of editing your application.
+## 🚀 Démarrage rapide
 
-**Use Lovable**
+### Prérequis
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/aea4db92-fd75-41ab-8c52-ab3ac84aa5e5) and start prompting.
+- Node.js 18+ et npm
 
-Changes made via Lovable will be committed automatically to this repo.
+### Installation
 
-**Use your preferred IDE**
+```bash
+# Cloner le projet
+git clone <URL_DU_REPO>
+cd tryon-guinee
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+# Installer les dépendances
+npm install
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Lancer le serveur de développement
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+L'application sera accessible sur `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🔧 Variables d'environnement
 
-**Use GitHub Codespaces**
+Créez un fichier `.env.local` à la racine (optionnel pour le mode démo) :
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```env
+# API IA (optionnel - fonctionne en mode démo sans ces variables)
+VITE_GENAI_API_URL=https://api.example-ia.com/generate
+VITE_GENAI_API_KEY=votre-clé-api
+VITE_GENAI_MODEL=nano-banana-v2
+```
 
-## What technologies are used for this project?
+**Mode démo** : L'application fonctionne sans clé API, elle retournera l'image originale comme placeholder.
 
-This project is built with:
+## 📦 Structure du projet
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```
+src/
+├── components/        # Composants React réutilisables
+│   ├── Header.tsx
+│   ├── Footer.tsx
+│   ├── UploadCard.tsx
+│   ├── StyleSelector.tsx
+│   ├── ResultViewer.tsx
+│   └── ConsentNotice.tsx
+├── pages/            # Pages principales
+│   ├── Index.tsx     # Page d'accueil
+│   ├── TryOn.tsx     # Page d'essayage
+│   └── About.tsx     # À propos
+├── store/            # État global (Zustand)
+│   └── useTryOnStore.ts
+├── lib/              # Utilitaires
+│   ├── types.ts      # Types TypeScript
+│   ├── prompt.ts     # Génération de prompts IA
+│   └── api.ts        # Appels API simulés
+└── data/
+    └── styles.json   # Catalogue des styles
+```
 
-## How can I deploy this project?
+## 🎨 Technologies utilisées
 
-Simply open [Lovable](https://lovable.dev/projects/aea4db92-fd75-41ab-8c52-ab3ac84aa5e5) and click on Share -> Publish.
+- **React** 18+ avec TypeScript
+- **Vite** pour le build
+- **Tailwind CSS** pour le style
+- **Zustand** pour la gestion d'état
+- **shadcn/ui** pour les composants UI
+- **Lucide React** pour les icônes
 
-## Can I connect a custom domain to my Lovable project?
+## 🧪 Mode démo vs Production
 
-Yes, you can!
+### Mode démo (par défaut)
+- Aucune clé API requise
+- Retourne l'image originale avec métadonnées simulées
+- Délai de 2s simulé pour imiter le traitement IA
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Mode production
+- Nécessite les variables d'environnement configurées
+- Appelle l'API IA réelle avec les prompts générés
+- Traitement réel avec le modèle configuré
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Pour activer le mode production, modifiez `DEMO_MODE` dans `src/lib/api.ts`
+
+## 📝 Styles disponibles
+
+- **Abaya** : Bazin en différentes couleurs (bleu roi, bordeaux, vert émeraude)
+- **Boubou** : Grand boubou traditionnel (blanc, indigo)
+- **Pagne** : Ensemble pagne et haut (wax, bazin)
+- **Léppi** : Tissu traditionnel à rayures (indigo, rouge)
+
+Chaque style inclut des options de :
+- Tissu (bazin, wax, léppi)
+- Couleur
+- Broderies
+- Longueur
+- Type de moussor/turban
+
+## 🔒 Vie privée & RGPD
+
+- Consentement explicite requis avant traitement
+- Aucun stockage permanent des photos
+- Bouton de suppression accessible à tout moment
+- Traitement temporaire en mémoire uniquement
+
+## 📄 License
+
+Ce projet est une démonstration. Aucune utilisation commerciale sans autorisation.
+
+---
+
+**Note** : Ceci est une application de démonstration. Les aperçus générés sont non contractuels et peuvent différer de la réalité. Aucune commande ni paiement n'est effectué via cette plateforme.
