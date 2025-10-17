@@ -1,47 +1,65 @@
-import { TryOnBody, TryOnResponse } from "./types";
+// src/lib/api.ts
+import type { TryOnBody, TryOnResponse } from "./types";
 
+// 1) Priorité à l'API locale (serveur Express): http://localhost:8787/api/tryon
+// 2) Sinon fallback Supabase functions si VITE_SUPABASE_URL est défini
+const LOCAL_API = import.meta.env.VITE_TRYON_API_URL || "http://localhost:8787/api/tryon";
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-export async function tryOnAPI(body: TryOnBody): Promise<TryOnResponse> {
-  try {
-    // Convert data URL to pure base64 if needed
-    let base64Data = body.personImageBase64;
-    if (base64Data && base64Data.includes(",")) {
-      base64Data = base64Data.split(",")[1];
-    }
-
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/tryon`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${SUPABASE_KEY}`,
-      },
-      body: JSON.stringify({
-        personImageBase64: base64Data,
-        personImageUrl: body.personImageUrl,
-        style: body.style,
-        quality: body.quality || "hd",
-        watermark: body.watermark || false,
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || `API error: ${response.status}`);
-    }
-
-    const data: TryOnResponse = await response.json();
-    return data;
-  } catch (error) {
-    console.error("TryOn API error:", error);
-    throw error;
+function pickApiEndpoint() {
+  // Si on a configuré VITE_TRYON_API_URL OU que le serveur local tourne, utilise-le
+  if (LOCAL_API) return { url: LOCAL_API, headers: { "Content-Type": "application/json" } as Record<string, string> };
+  // Sinon, tente Supabase (hébergé)
+  if (SUPABASE_URL) {
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (SUPABASE_KEY) headers["Authorization"] = `Bearer ${SUPABASE_KEY}`;
+    return { url: `${SUPABASE_URL}/functions/v1/tryon`, headers };
   }
+  throw new Error("Aucune API configurée (VITE_TRYON_API_URL ou VITE_SUPABASE_URL).");
+}
+
+export async function tryOnAPI(body: TryOnBody): Promise<TryOnResponse> {
+  // Nettoie le base64 si c'est un dataURL
+  let base64 = body.personImageBase64;
+  if (base64 && base64.includes(",")) base64 = base64.split(",")[1];
+
+  const { url, headers } = pickApiEndpoint();
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      personImageBase64: base64,
+      personImageUrl: body.personImageUrl,
+      style: body.style,
+      quality: body.quality || "hd",
+      watermark: body.watermark || false,
+    }),
+  });
+
+  let json: any = {};
+  try {
+    json = await res.json();
+  } catch {
+    // no-op
+  }
+
+  if (!res.ok) {
+    // Fais remonter l’erreur lisible
+    const msg = json?.error || json?.details || `HTTP ${res.status}`;
+    throw new Error(msg);
+  }
+
+  if (!json?.resultUrl) {
+    throw new Error("Pas d'image dans la réponse IA");
+  }
+
+  return json as TryOnResponse;
 }
 
 export function createDownloadUrl(url: string): string {
-  // Data URLs can be downloaded directly
-  return url;
+  return url; // data: URLs téléchargeables directement
 }
 
 export function downloadImage(url: string, filename: string) {

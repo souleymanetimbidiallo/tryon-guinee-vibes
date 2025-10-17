@@ -5,8 +5,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const GENAI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-const GENAI_MODEL = "gemini-2.0-flash";
+const GENAI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent";
+const GENAI_MODEL = "gemini-2.5-flash-image-preview";
 
 function makeDemoPlaceholder(): string {
   const svg = `
