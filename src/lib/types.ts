@@ -1,4 +1,6 @@
-export type StyleCategory = "abaya" | "boubou" | "pagne" | "leppi";
+export type Gender = "male" | "female" | "unisex";
+
+export type StyleCategory = "abaya" | "boubou" | "pagne" | "leppi" | "complet" | "chemise" | "kaftan" | "autre";
 
 export type HeadwrapType = "moussor-haut" | "moussor-bas" | "turban" | "none";
 
@@ -12,6 +14,7 @@ export interface Style {
   length?: string;
   headwrap?: HeadwrapType;
   description?: string;
+  gender: Gender;
 }
 
 export interface TryOnBody {

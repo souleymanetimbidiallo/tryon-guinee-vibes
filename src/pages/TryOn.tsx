@@ -8,7 +8,11 @@ import { ConsentNotice } from "@/components/ConsentNotice";
 import { Button } from "@/components/ui/button";
 import { useTryOnStore } from "@/store/useTryOnStore";
 import { tryOnAPI } from "@/lib/api";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Loader2, Sparkles, ArrowRight } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { useFakeProgress } from "@/hooks/use-fake-progress";
+import { fireConfettiBurst, fireConfettiCelebrate } from "@/lib/confetti";
+
 import { toast } from "sonner";
 
 export default function TryOn() {
@@ -27,6 +31,8 @@ export default function TryOn() {
   } = useTryOnStore();
 
   const canGenerate = userImage && selectedStyle && hasConsented && !loading;
+  const progress = useFakeProgress(loading);
+
 
   const handleGenerate = async () => {
     if (!canGenerate) return;
@@ -47,11 +53,15 @@ export default function TryOn() {
           embroidery: selectedStyle.embroidery,
           headwrap: selectedStyle.headwrap,
           length: selectedStyle.length,
+          gender: selectedStyle.gender,
         },
         quality: "hd",
       });
 
       setResultUrl(response.resultUrl);
+      // Confettis: burst + petit “celebrate”
+      fireConfettiBurst();
+      fireConfettiCelebrate(900);
       toast.success("Votre tenue a été générée avec succès !");
     } catch (error) {
       console.error("Generation error:", error);
@@ -150,6 +160,22 @@ export default function TryOn() {
                     </div>
                     <h2 className="text-2xl font-semibold">Générez votre aperçu</h2>
                   </div>
+
+                  {/* Barre de progression pendant le chargement */}
+                  {loading && (
+                    <div className="max-w-2xl mx-auto mb-6 rounded-xl border p-4 bg-card/40">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Génération en cours…</span>
+                        <span className="ml-auto tabular-nums">{Math.round(progress)}%</span>
+                      </div>
+                      <Progress value={progress} />
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        Nous ajustons la tenue (bazin, broderies, pose…). Cela peut prendre quelques secondes.
+                      </p>
+                    </div>
+                  )}
+
                   <div className="flex justify-center">
                     <Button
                       variant="hero"
@@ -158,9 +184,18 @@ export default function TryOn() {
                       disabled={!canGenerate}
                       className="text-base"
                     >
-                      <Sparkles className="mr-2 h-5 w-5" />
-                      Générer mon essayage
-                      <ArrowRight className="ml-2 h-5 w-5" />
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          Génération…
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="mr-2 h-5 w-5" />
+                          Générer mon essayage
+                          <ArrowRight className="ml-2 h-5 w-5" />
+                        </>
+                      )}
                     </Button>
                   </div>
                 </section>

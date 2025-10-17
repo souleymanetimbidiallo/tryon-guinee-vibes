@@ -8,18 +8,8 @@
     "embroidery": "doré",
     "length": "cheville",
     "headwrap": "moussor-haut",
-    "description": "Abaya élégante en bazin bleu roi avec broderies dorées"
-  },
-  {
-    "id": "abaya-bordeaux-argent",
-    "label": "Abaya Bazin Bordeaux",
-    "category": "abaya",
-    "fabric": "bazin",
-    "color": "bordeaux",
-    "embroidery": "argent",
-    "length": "cheville",
-    "headwrap": "moussor-bas",
-    "description": "Abaya raffinée bordeaux avec détails argentés"
+    "description": "Abaya élégante en bazin bleu roi avec broderies dorées",
+    "gender": "female"
   },
   {
     "id": "abaya-vert-or",
@@ -30,27 +20,8 @@
     "embroidery": "or",
     "length": "cheville",
     "headwrap": "moussor-haut",
-    "description": "Abaya en bazin vert avec ornements dorés"
-  },
-  {
-    "id": "boubou-bazin-blanc",
-    "label": "Boubou Homme Blanc",
-    "category": "boubou",
-    "fabric": "bazin",
-    "color": "blanc",
-    "embroidery": "poitrine-dorée",
-    "length": "long",
-    "description": "Grand boubou traditionnel blanc avec broderies sur la poitrine"
-  },
-  {
-    "id": "boubou-indigo",
-    "label": "Boubou Indigo",
-    "category": "boubou",
-    "fabric": "bazin",
-    "color": "indigo",
-    "embroidery": "argent",
-    "length": "long",
-    "description": "Boubou majestueux indigo avec détails argentés"
+    "description": "Abaya en bazin vert avec ornements dorés",
+    "gender": "female"
   },
   {
     "id": "pagne-wax-classic",
@@ -60,34 +31,82 @@
     "color": "multicolore",
     "length": "genou",
     "headwrap": "turban",
-    "description": "Pagne coloré avec haut assorti et turban élégant"
+    "description": "Pagne coloré avec haut assorti et turban élégant",
+    "gender": "female"
   },
   {
-    "id": "pagne-bazin-rose",
-    "label": "Pagne Bazin Rose",
-    "category": "pagne",
-    "fabric": "bazin",
-    "color": "rose poudré",
-    "length": "genou",
-    "headwrap": "moussor-haut",
-    "description": "Ensemble pagne rose avec broderies délicates"
-  },
-  {
-    "id": "leppi-indigo",
-    "label": "Ensemble Léppi Indigo",
+    "id": "leppi-indigo-femme",
+    "label": "Léppi Indigo (Femme)",
     "category": "leppi",
     "fabric": "léppi",
     "color": "indigo",
     "length": "long",
-    "description": "Léppi traditionnel à rayures indigo"
+    "description": "Léppi traditionnel à rayures indigo (coupe féminine)",
+    "gender": "female"
   },
   {
-    "id": "leppi-rouge",
-    "label": "Ensemble Léppi Rouge",
+    "id": "boubou-bazin-blanc-homme",
+    "label": "Grand Boubou Blanc (Homme)",
+    "category": "boubou",
+    "fabric": "bazin",
+    "color": "blanc",
+    "embroidery": "poitrine-dorée",
+    "length": "long",
+    "description": "Grand boubou blanc avec broderies poitrine",
+    "gender": "male"
+  },
+  {
+    "id": "boubou-indigo-homme",
+    "label": "Boubou Indigo (Homme)",
+    "category": "boubou",
+    "fabric": "bazin",
+    "color": "indigo",
+    "embroidery": "argent",
+    "length": "long",
+    "description": "Boubou majestueux indigo avec détails argentés",
+    "gender": "male"
+  },
+  {
+    "id": "complet-bazin-3p",
+    "label": "Complet 3 pièces Bazin",
+    "category": "complet",
+    "fabric": "bazin",
+    "color": "bleu nuit",
+    "embroidery": "discrète",
+    "length": "mi-long",
+    "description": "Tunique + pantalon + manteau long (coupe homme)",
+    "gender": "male"
+  },
+  {
+    "id": "chemise-bazin",
+    "label": "Chemise Bazin",
+    "category": "chemise",
+    "fabric": "bazin",
+    "color": "blanc cassé",
+    "embroidery": "manchette",
+    "length": "hanche",
+    "description": "Chemise bazin ajustée (homme)",
+    "gender": "male"
+  },
+  {
+    "id": "leppi-indigo-homme",
+    "label": "Léppi Indigo (Homme)",
     "category": "leppi",
     "fabric": "léppi",
-    "color": "rouge",
+    "color": "indigo",
     "length": "long",
-    "description": "Léppi authentique en rouge vif"
+    "description": "Léppi traditionnel homme",
+    "gender": "male"
+  },
+  {
+    "id": "kaftan-unisex-indigo",
+    "label": "Kaftan Indigo (Unisexe)",
+    "category": "kaftan",
+    "fabric": "bazin",
+    "color": "indigo",
+    "embroidery": "poitrine",
+    "length": "mi-long",
+    "description": "Kaftan droit indigo, coupe unisexe",
+    "gender": "unisex"
   }
 ]

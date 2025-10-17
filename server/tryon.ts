@@ -40,9 +40,28 @@ app.post("/api/tryon", async (req, res) => {
       base64 = buf.toString("base64");
     }
 
-    const prompt = `Habiller la personne avec une ${style?.category || "abaya"} en ${style?.fabric || "bazin"} ${style?.color || "bleu"},
-    broderies ${style?.embroidery || "dorées"}, longueur ${style?.length || "cheville"}.
-    Conserver visage/cheveux/mains visibles, pose identique, plis réalistes, rendu studio propre.`;
+    const gender = style?.gender || "unisex";
+const isFemale = gender === "female";
+const isMale = gender === "male";
+
+const accessories = isFemale
+  ? (style?.headwrap ? `, avec ${style.headwrap} assorti` : "")
+  : ", sans couvre-chef féminin; si besoin, bonnet/chéchia discret";
+
+const fit = isMale
+  ? "coupe masculine (épaules, torse, longueur adaptée),"
+  : isFemale
+    ? "coupe féminine (taille marquée, aisance aux hanches),"
+    : "coupe unisexe confortable,";
+
+const prompt = `
+Habiller la personne avec un style ${gender === "male" ? "homme" : gender === "female" ? "femme" : "unisexe"} :
+- ${style?.category || "abaya"} en ${style?.fabric || "bazin"} ${style?.color || ""} ${style?.embroidery ? `avec broderies ${style.embroidery}` : ""}
+- longueur ${style?.length || "adaptée à la tenue"}${accessories}
+- ${fit} respecter la pose, plis réalistes, cohérence textile, rendu studio propre
+- conserver le visage, la coiffure et les mains visibles par-dessus le vêtement
+`.trim();
+
 
     const resp = await fetch(`${GENAI_API_URL}?key=${GENAI_API_KEY}`, {
       method: "POST",
