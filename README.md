@@ -1,123 +1,66 @@
-# TryOn Guinée 🇬🇳
+# TryOn Guinée
 
-Application web d'essayage virtuel de tenues traditionnelles guinéennes utilisant l'intelligence artificielle.
+Essayage virtuel de tenues guinéennes (abaya, boubou, léppi, pagne…) par IA.
 
-## 🎯 Fonctionnalités
+**Stack** : Next.js 16 (App Router) · Tailwind CSS 4 · Google Gemini (`@google/genai`)
 
-- **Upload de photo** : Glissez-déposez ou sélectionnez votre photo
-- **Catalogue de styles** : Abaya, Boubou, Pagne, Léppi avec options de personnalisation
-- **Génération IA** : Aperçu réaliste avec conservation du visage et de la pose
-- **Téléchargement** : Enregistrez vos essayages virtuels
-- **Respect de la vie privée** : Traitement temporaire sans stockage permanent
-
-## 🚀 Démarrage rapide
-
-### Prérequis
-
-- Node.js 18+ et npm
-
-### Installation
+## Démarrer
 
 ```bash
-# Cloner le projet
-git clone <URL_DU_REPO>
-cd tryon-guinee
-
-# Installer les dépendances
 npm install
-
-# Lancer le serveur de développement
-npm run dev
+cp .env.example .env.local   # puis renseigne GEMINI_API_KEY
+npm run dev                  # http://localhost:3000
 ```
 
-L'application sera accessible sur `http://localhost:8080`
-
-## 🔧 Variables d'environnement
-
-Créez un fichier `.env.local` à la racine (optionnel pour le mode démo) :
-
-```env
-# API IA (optionnel - fonctionne en mode démo sans ces variables)
-VITE_GENAI_API_URL=https://api.example-ia.com/generate
-VITE_GENAI_API_KEY=votre-clé-api
-VITE_GENAI_MODEL=nano-banana-v2
-```
-
-**Mode démo** : L'application fonctionne sans clé API, elle retournera l'image originale comme placeholder.
-
-## 📦 Structure du projet
+## Structure
 
 ```
 src/
-├── components/        # Composants React réutilisables
-│   ├── Header.tsx
-│   ├── Footer.tsx
-│   ├── UploadCard.tsx
-│   ├── StyleSelector.tsx
-│   ├── ResultViewer.tsx
-│   └── ConsentNotice.tsx
-├── pages/            # Pages principales
-│   ├── Index.tsx     # Page d'accueil
-│   ├── TryOn.tsx     # Page d'essayage
-│   └── About.tsx     # À propos
-├── store/            # État global (Zustand)
-│   └── useTryOnStore.ts
-├── lib/              # Utilitaires
-│   ├── types.ts      # Types TypeScript
-│   ├── prompt.ts     # Génération de prompts IA
-│   └── api.ts        # Appels API simulés
-└── data/
-    └── styles.json   # Catalogue des styles
+  app/
+    page.tsx              accueil
+    essayer/page.tsx      page d'essayage
+    api/tryon/route.ts    appel Gemini (clé côté serveur uniquement)
+  components/studio/
+    TryOnStudio.tsx       état + appel API
+    PersonPicker.tsx      photo · mes personnages · mannequin IA
+    GarmentPicker.tsx     catalogue · photo de tenue
+    ResultPanel.tsx       décor, format, rendu, enregistrement
+  lib/
+    styles.ts             catalogue (ajoute un style ici)
+    prompt.ts             prompt unique (4 combinaisons qui × quoi)
+    options.ts            décors, formats, mannequin (liste blanche serveur)
+    characters-db.ts      galerie de personnages (IndexedDB, navigateur)
+    rate-limit.ts         limite d'essais par IP
+    resize-image.ts       redimensionnement côté navigateur
+public/styles/            photos de référence des tenues
 ```
 
-## 🎨 Technologies utilisées
+## Ajouter une tenue
 
-- **React** 18+ avec TypeScript
-- **Vite** pour le build
-- **Tailwind CSS** pour le style
-- **Zustand** pour la gestion d'état
-- **shadcn/ui** pour les composants UI
-- **Lucide React** pour les icônes
+1. Dépose une photo de la tenue (fond uni, en pied) dans `public/styles/`.
+2. Ajoute une entrée dans `STYLES` (`src/lib/styles.ts`) avec `image: "/styles/ma-tenue.jpg"`.
 
-## 🧪 Mode démo vs Production
+La photo de référence est envoyée à Gemini avec la photo de l'utilisateur : le rendu suit
+le vrai vêtement, pas seulement sa description.
 
-### Mode démo (par défaut)
-- Aucune clé API requise
-- Retourne l'image originale avec métadonnées simulées
-- Délai de 2s simulé pour imiter le traitement IA
+## Modes
 
-### Mode production
-- Nécessite les variables d'environnement configurées
-- Appelle l'API IA réelle avec les prompts générés
-- Traitement réel avec le modèle configuré
+| Qui porte la tenue | Quelle tenue | Usage typique |
+| --- | --- | --- |
+| Une photo | Catalogue | Essayage avant achat |
+| Mes personnages | Catalogue ou photo de tenue | Personnages récurrents (images, vidéos) |
+| Mannequin IA | Photo de tenue | Lookbook pour créateurs |
 
-Pour activer le mode production, modifiez `DEMO_MODE` dans `src/lib/api.ts`
+Astuce : génère un mannequin, puis « Enregistrer comme personnage » pour le réutiliser
+avec le même visage.
 
-## 📝 Styles disponibles
+Les personnages sont stockés dans le navigateur (IndexedDB) : ils ne quittent l'appareil
+qu'au moment d'une génération, et ne sont pas synchronisés entre appareils.
 
-- **Abaya** : Bazin en différentes couleurs (bleu roi, bordeaux, vert émeraude)
-- **Boubou** : Grand boubou traditionnel (blanc, indigo)
-- **Pagne** : Ensemble pagne et haut (wax, bazin)
-- **Léppi** : Tissu traditionnel à rayures (indigo, rouge)
+## Variables d'environnement
 
-Chaque style inclut des options de :
-- Tissu (bazin, wax, léppi)
-- Couleur
-- Broderies
-- Longueur
-- Type de moussor/turban
-
-## 🔒 Vie privée & RGPD
-
-- Consentement explicite requis avant traitement
-- Aucun stockage permanent des photos
-- Bouton de suppression accessible à tout moment
-- Traitement temporaire en mémoire uniquement
-
-## 📄 License
-
-Ce projet est une démonstration. Aucune utilisation commerciale sans autorisation.
-
----
-
-**Note** : Ceci est une application de démonstration. Les aperçus générés sont non contractuels et peuvent différer de la réalité. Aucune commande ni paiement n'est effectué via cette plateforme.
+| Variable             | Rôle                                          |
+| -------------------- | --------------------------------------------- |
+| `GEMINI_API_KEY`     | Clé Google AI Studio (obligatoire)            |
+| `GEMINI_MODEL`       | Modèle image (défaut `gemini-2.5-flash-image`) |
+| `TRYON_MAX_PER_HOUR` | Essais max par IP et par heure (défaut 10)     |
